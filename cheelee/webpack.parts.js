@@ -1,17 +1,17 @@
-const PurifyCSSPlugin = require('purifycss-webpack')
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const TerserPlugin = require('terser-webpack-plugin')
+const PurifyCSSPlugin = require("purifycss-webpack");
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
 
-const publicPath = '/'
+const publicPath = "/cheelee/build/";
 
-exports.publicPath = publicPath
+exports.publicPath = publicPath;
 
 exports.devServer = ({ host, port } = {}) => ({
   devServer: {
     watchOptions: {
-      ignored: /node_modules/
+      ignored: /node_modules/,
     },
     publicPath,
     // Enable history API fallback so HTML5 History API based
@@ -19,7 +19,7 @@ exports.devServer = ({ host, port } = {}) => ({
     historyApiFallback: true,
 
     // Display only errors to reduce the amount of output.
-    stats: 'errors-only',
+    stats: "errors-only",
 
     // Parse host and port from env to allow customization.
     //
@@ -34,10 +34,10 @@ exports.devServer = ({ host, port } = {}) => ({
     // overlay: true is equivalent
     overlay: {
       errors: true,
-      warnings: false
-    }
-  }
-})
+      warnings: false,
+    },
+  },
+});
 
 exports.loadPug = (options) => ({
   module: {
@@ -46,17 +46,17 @@ exports.loadPug = (options) => ({
         test: /\.pug$/,
         use: [
           {
-            loader: 'html-loader'
+            loader: "html-loader",
           },
           {
-            loader: 'pug-html-loader',
-            options
-          }
-        ]
-      }
-    ]
-  }
-})
+            loader: "pug-html-loader",
+            options,
+          },
+        ],
+      },
+    ],
+  },
+});
 
 exports.lintJS = ({ include, exclude, options }) => ({
   module: {
@@ -65,46 +65,44 @@ exports.lintJS = ({ include, exclude, options }) => ({
         test: /\.js$/,
         include,
         exclude,
-        enforce: 'pre',
-        loader: 'eslint-loader',
-        options
-      }
-    ]
-  }
-})
+        enforce: "pre",
+        loader: "eslint-loader",
+        options,
+      },
+    ],
+  },
+});
 
 const sharedCSSLoaders = [
   {
-    loader: 'css-loader',
+    loader: "css-loader",
     options: {
-      localIdentName: '[hash:base64:5]'
-    }
-  }
-]
+      localIdentName: "[hash:base64:5]",
+    },
+  },
+];
 
 exports.autoprefix = () => ({
-  loader: 'postcss-loader',
+  loader: "postcss-loader",
   options: {
-    plugins: () => [require('autoprefixer')]
-  }
-})
+    plugins: () => [require("autoprefixer")],
+  },
+});
 
 exports.purifyCSS = (options) => ({
-  plugins: [
-    new PurifyCSSPlugin(options)
-  ]
-})
+  plugins: [new PurifyCSSPlugin(options)],
+});
 
 exports.minifyCSS = ({ options }) => ({
   optimization: {
     minimizer: [
       new OptimizeCSSAssetsPlugin({
         cssProcessorOptions: options,
-        canPrint: true // false for analyzer
-      })
-    ]
-  }
-})
+        canPrint: true, // false for analyzer
+      }),
+    ],
+  },
+});
 
 exports.loadCSS = ({ include, exclude, use } = {}) => ({
   module: {
@@ -117,14 +115,14 @@ exports.loadCSS = ({ include, exclude, use } = {}) => ({
 
         use: [
           {
-            loader: 'style-loader'
+            loader: "style-loader",
           },
-          ...sharedCSSLoaders.concat(use)
-        ]
-      }
-    ]
-  }
-})
+          ...sharedCSSLoaders.concat(use),
+        ],
+      },
+    ],
+  },
+});
 
 exports.extractCSS = ({ include, exclude, options, use = [] } = {}) => ({
   module: {
@@ -135,14 +133,12 @@ exports.extractCSS = ({ include, exclude, options, use = [] } = {}) => ({
         include,
         exclude,
 
-        use: [MiniCssExtractPlugin.loader, ...sharedCSSLoaders, ...use]
-      }
-    ]
+        use: [MiniCssExtractPlugin.loader, ...sharedCSSLoaders, ...use],
+      },
+    ],
   },
-  plugins: [
-    new MiniCssExtractPlugin(options)
-  ]
-})
+  plugins: [new MiniCssExtractPlugin(options)],
+});
 
 exports.loadImages = ({ include, exclude, options } = {}) => ({
   module: {
@@ -154,13 +150,13 @@ exports.loadImages = ({ include, exclude, options } = {}) => ({
         exclude,
 
         use: {
-          loader: 'url-loader',
-          options
-        }
-      }
-    ]
-  }
-})
+          loader: "url-loader",
+          options,
+        },
+      },
+    ],
+  },
+});
 
 exports.optimizeImages = ({ include, exclude } = {}) => ({
   module: {
@@ -172,8 +168,7 @@ exports.optimizeImages = ({ include, exclude } = {}) => ({
         exclude,
 
         use: {
-
-          loader: 'image-webpack-loader',
+          loader: "image-webpack-loader",
 
           options: {
             progressive: true,
@@ -181,7 +176,7 @@ exports.optimizeImages = ({ include, exclude } = {}) => ({
             // optimizationLevel: 7,
 
             gifsicle: {
-              interlaced: false
+              interlaced: false,
             },
 
             /*
@@ -194,15 +189,15 @@ exports.optimizeImages = ({ include, exclude } = {}) => ({
             }, */
 
             pngquant: {
-              quality: '65-90',
-              speed: 4
-            }
-          }
-        }
-      }
-    ]
-  }
-})
+              quality: "65-90",
+              speed: 4,
+            },
+          },
+        },
+      },
+    ],
+  },
+});
 
 exports.loadFonts = ({ include, exclude, options } = {}) => ({
   module: {
@@ -215,13 +210,13 @@ exports.loadFonts = ({ include, exclude, options } = {}) => ({
         exclude,
 
         use: {
-          loader: 'file-loader',
-          options
-        }
-      }
-    ]
-  }
-})
+          loader: "file-loader",
+          options,
+        },
+      },
+    ],
+  },
+});
 
 exports.loadJS = ({ include, exclude, options } = {}) => ({
   module: {
@@ -232,37 +227,33 @@ exports.loadJS = ({ include, exclude, options } = {}) => ({
         include,
         exclude,
 
-        loader: 'babel-loader',
-        options
-      }
-    ]
-  }
-})
+        loader: "babel-loader",
+        options,
+      },
+    ],
+  },
+});
 
-exports.minifyJS = options => ({
+exports.minifyJS = (options) => ({
   optimization: {
-    minimizer: [
-      new TerserPlugin(options)
-    ]
-  }
-})
+    minimizer: [new TerserPlugin(options)],
+  },
+});
 
 exports.page = ({
-  path = '',
-  template = require.resolve(
-    'html-webpack-plugin/default_index.ejs'
-  ),
+  path = "",
+  template = require.resolve("html-webpack-plugin/default_index.ejs"),
   title,
   entry,
-  chunks
+  chunks,
 } = {}) => ({
   entry,
   plugins: [
     new HtmlWebpackPlugin({
-      filename: `${path && path + '/'}index.html`,
+      filename: `${path && path + "/"}index.html`,
       template,
       title,
-      chunks
-    })
-  ]
-})
+      chunks,
+    }),
+  ],
+});
